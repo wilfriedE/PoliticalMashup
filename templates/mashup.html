@@ -1,0 +1,44 @@
+<html>
+<head>
+<script type="text/javascript"
+  src="static/dygraph-combined.js"></script>
+  <script type="text/javascript"
+  src="static/jquery.js"></script>
+</head>
+<body>
+{% for member in members %}
+ {%- if loop.index >= 10 %}{% break %}{% endif %}
+<b><a href="http://{{member.domain}}#">{{member.first_name}} {{member.last_name}}</a></b><img src="static/members/{{member.id}}.jpg"><div id="{{member.id}}"></div>
+
+	
+<script>
+$.getJSON( "bills/{{member.id}}", function( response ) {
+    var jsonData = response;
+    var bills = jsonData['results'][0]['bills'];
+    var billscsv = "Date, Consponsors\n";
+
+    bills.forEach(function ( bill ) { 
+    	billscsv += bill['introduced_date'] + "," + bill['cosponsors']  + "\n";
+	}); 
+
+    g = new Dygraph(
+
+    // containing div
+    document.getElementById("{{member.id}}"),
+
+    // CSV or path to a CSV file.
+
+    billscsv
+   );
+
+});
+
+</script>
+
+	<br\>
+{% endfor %}
+
+
+
+</body>
+</html>
